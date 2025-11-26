@@ -18,7 +18,7 @@ smoke_model.overrides["classes"] =[0]
 helmet_model.overrides["classes"] =[0,1]
 accident_model.overrides["classes"] =[0]
 
-model = [fire_model,smoke_model,helmet_model,accident_model]
+models= [fire_model,smoke_model,helmet_model,accident_model]
 
 app.mount("/static",StaticFiles(directory="static"),name = "static")
 
@@ -36,6 +36,13 @@ async def predict_image(file:UploadFile=File(...)):
         image_bytes = await file.read()
         np_img = np.frombuffer(image_bytes, np.uint8)
         img = cv2.imdecode(np_img, cv2.IMREAD_COLOR)
+
+        if img is None:
+            return Response(contentb="invalid image file",media_type="text/plain")
+        
+    for model in models:
+        results = model(img,verbose=False)
+        img = results[0].plot
 
 
         
