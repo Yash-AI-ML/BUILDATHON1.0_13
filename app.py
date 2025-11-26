@@ -69,3 +69,5 @@ def webcam_feed():
                 encoded.tobytes() +
                 b"\r\n"
             )
+            await asyncio.sleep(0.02)
+            
