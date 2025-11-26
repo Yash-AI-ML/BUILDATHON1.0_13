@@ -33,3 +33,72 @@
       border: 2px solid #333;
       border-radius: 8px;
     }
+ button {
+      padding: 10px 15px;
+      margin-top: 10px;
+      cursor: pointer;
+      border-radius: 6px;
+      border: none;
+      background: #007bff;
+      color: white;
+      font-size: 16px;
+    }
+
+    button:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+
+<body>
+<h1>AI POWERED SMART SURVEILLANCE AND ALERT SYSTEM</h1>
+
+<audio id="beepSound">
+  <source src="\static\beep.mp3" type="audio/mpeg">
+</audio>
+
+<div class="section-title">Upload Image</div>
+
+<input type="file" id="fileInput" accept="image/*">
+<button onclick="predictImage()">Predict</button>
+
+<br>
+<img id="uploadedResult" style="display:none;">
+
+<div class="section-title">Webcam Detection</div>
+
+<button id="startWebcamBtn">Start Webcam</button>
+<button id="stopWebcamBtn" disabled>Stop Webcam</button>
+
+<br>
+<img id="webcamFeed" style="display:none;">
+
+
+<script>
+  const webcamFeed = document.getElementById("webcamFeed");
+  const startBtn = document.getElementById("startWebcamBtn");
+  const stopBtn = document.getElementById("stopWebcamBtn");
+  const beepSound = document.getElementById("beepSound");
+
+  let webcamRunning = false;
+
+  async function predictImage() {
+    const input = document.getElementById("fileInput");
+    if (!input.files.length) return alert("Select an image first!");
+
+    const formData = new FormData();
+    formData.append("file", input.files[0]);
+
+    let res = await fetch("/predict-image", {
+      method: "POST",
+      body: formData
+    });
+
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+
+    const img = document.getElementById("uploadedResult");
+    img.src = url;
+    img.style.display = "block";
+  }       
