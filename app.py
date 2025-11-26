@@ -56,5 +56,16 @@ def webcam_feed():
             ret,frame = cap.read
             if not ret:
                 break    
+            
+            for model in models: #runs all 4 model on webcam frame
+                results = model(frame,verbose = False)
+                frame = results[0].plot()
 
-        
+            _, encoded = cv2.imencode(".jpg",frame)
+
+            yield (
+                b"--frame\r\n"
+                b"content-type :image/jpeg\r\n\r\n"+
+                encoded.tobytes() +
+                b"\r\n"
+            )
