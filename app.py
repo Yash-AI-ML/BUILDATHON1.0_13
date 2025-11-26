@@ -8,10 +8,10 @@ import asyncio
 
 app = FastAPI()
 
-fire_model = YOLO()
-smoke_model= YOLO()
-helmet_model= YOLO()
-accident_model= YOLO()
+fire_model = YOLO(r"C:\Users\ASUS\OneDrive\Open CV\runs\detect\ai_cctv9\weights\best.pt")
+smoke_model= YOLO(r"C:\Users\ASUS\OneDrive\Desktop\Open CV\runs\detect\smoke_ai_detect5\weights\best.pt")
+helmet_model= YOLO(r"C:\Users\ASUS\OneDrive\Desktop\Open CV\runs\detect\helmet_detect_ai2\weights\best.pt")
+accident_model= YOLO(r"C:\Users\ASUS\OneDrive\Desktop\Open CV\runs\detect\model_car_accident\weights\best.pt")
 
 fire_model.overrides["classes"] =[0]
 smoke_model.overrides["classes"] =[0]
