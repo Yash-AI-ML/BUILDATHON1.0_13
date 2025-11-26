@@ -58,13 +58,6 @@
   <source src="\static\beep.mp3" type="audio/mpeg">
 </audio>
 
-<div class="section-title">Upload Image</div>
-
-<input type="file" id="fileInput" accept="image/*">
-<button onclick="predictImage()">Predict</button>
-
-<br>
-<img id="uploadedResult" style="display:none;">
 
 <div class="section-title">Webcam Detection</div>
 
@@ -98,7 +91,39 @@
     const blob = await res.blob();
     const url = URL.createObjectURL(blob);
 
-    const img = document.getElementById("uploadedResult");
-    img.src = url;
-    img.style.display = "block";
+
   }       
+  startBtn.onclick = () => {
+    webcamFeed.src = "/webcam";
+    webcamFeed.style.display = "block";
+
+    startBtn.disabled = true;
+    stopBtn.disabled = false;
+    webcamRunning = true;
+
+    
+    checkFireInterval = setInterval(async () => {
+      fetch("/last-prediction")
+        .then(res => res.json())
+        .then(data => {
+          if (data.label && data.label.toLowerCase().includes("fire")) {
+            beepSound.play();
+          }
+        });
+    }, 1000);
+  };
+
+  stopBtn.onclick = () => {
+    webcamFeed.src = "";
+    webcamFeed.style.display = "none";
+
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+    webcamRunning = false;
+
+    clearInterval(checkFireInterval);
+  };
+</script>
+
+</body>
+</html>
