@@ -42,7 +42,19 @@ async def predict_image(file:UploadFile=File(...)):
         
     for model in models:
         results = model(img,verbose=False)
-        img = results[0].plot
+        img = results[0].plot()
 
+    success,encoded_image = cv2.imencode(".jpg",img)
+    if not success:
+        return Response(content=b"failed to encode image",media_type="text/plain")
+    
+@app.get("/webcam")
+def webcam_feed():
+    async def video_stream():
+        cap = cv2.VideoCapture(0)
+        while True:
+            ret,frame = cap.read
+            if not ret:
+                break    
 
         
